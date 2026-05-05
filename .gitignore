@@ -1,0 +1,13 @@
+# Entornos virtuales
+env_banda/
+env_banda_compa/
+
+# Archivos compilados de Python
+__pycache__/
+*.pyc
+
+# Bases de datos y archivos generados (Que cada quien genere los suyos)
+database/
+rostros_registrados/
+*.pdf
+*.csv
