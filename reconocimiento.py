@@ -7,18 +7,14 @@ import db_manager
 import tkinter as tk
 from tkinter import messagebox
 
-# ¡SE ELIMINÓ LA VENTANA FANTASMA (root = tk.Tk()) QUE ROBABA EL VIDEO!
-
 CARPETA_ROSTROS = "rostros_registrados"
 pase_activo = False
 
 def registrar_elemento(no_control, nombre):
     """Enciende la cámara, captura un rostro y lo guarda (o reactiva) en SQLite."""
-    # Quitar espacios accidentales al inicio o final
     no_control = str(no_control).strip()
     nombre = str(nombre).strip().upper()
 
-    # Evitar registros vacíos
     if not no_control or not nombre:
         messagebox.showwarning("Aviso", "No puedes dejar los campos en blanco.")
         return
@@ -30,16 +26,13 @@ def registrar_elemento(no_control, nombre):
 
     es_reactivacion = False
 
-    # ¿El alumno ya existe?
     if registro:
         estado_actual = registro[1]
-        # Si existe y está activo, lo bloqueamos. Cero duplicados.
         if estado_actual == 'Activo' or estado_actual is None:
             messagebox.showerror("Bloqueo de Seguridad", f"El No. Control {no_control} ya está registrado y activo en el sistema.")
             conexion.close()
             return
         else:
-            # Si existe pero está inactivo, le preguntamos si lo quiere revivir
             respuesta = messagebox.askyesno("Reactivar Alumno", f"El alumno {no_control} fue dado de baja anteriormente.\n\n¿Deseas REACTIVARLO y tomarle una nueva foto?")
             if respuesta:
                 es_reactivacion = True
@@ -68,12 +61,10 @@ def registrar_elemento(no_control, nombre):
                 
                 try:
                     if es_reactivacion:
-                        # Si estaba de baja, lo actualizamos a Activo con su nueva foto
                         cursor.execute("UPDATE elementos SET nombre = ?, rostro_encoding = ?, estado = 'Activo' WHERE no_control = ?",
                                        (nombre, encoding_bytes, no_control))
                         mensaje_exito = f"Elemento {nombre} REACTIVADO exitosamente."
                     else:
-                        # Si es nuevo, lo insertamos
                         cursor.execute("INSERT INTO elementos (no_control, nombre, rostro_encoding, estado) VALUES (?, ?, ?, 'Activo')",
                                        (no_control, nombre, encoding_bytes))
                         mensaje_exito = f"Elemento {nombre} REGISTRADO exitosamente."
@@ -83,7 +74,6 @@ def registrar_elemento(no_control, nombre):
                     if not os.path.exists(CARPETA_ROSTROS):
                         os.makedirs(CARPETA_ROSTROS)
 
-                    # Guardamos/Sobreescribimos la foto física
                     ruta_imagen = os.path.join(CARPETA_ROSTROS, f"{no_control}.jpg")
                     cv2.imwrite(ruta_imagen, frame)
 

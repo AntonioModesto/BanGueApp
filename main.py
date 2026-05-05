@@ -12,7 +12,7 @@ import db_manager
 import reconocimiento
 import reportes
 
-# --- CONFIGURACIÓN DE COLORES AMIGABLES ---
+
 ctk.set_appearance_mode("Light")
 BG_COLOR = "#F4F2EE"       
 CARD_BG = "#FFFFFF"        
@@ -33,9 +33,7 @@ class DashboardPremium(ctk.CTk):
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        # =========================================================
-        # 1. BARRA LATERAL (Ancha y con textos claros)
-        # =========================================================
+
         self.sidebar_frame = ctk.CTkFrame(self, width=280, corner_radius=25, fg_color=CARD_BG)
         self.sidebar_frame.grid(row=0, column=0, padx=(20, 10), pady=20, sticky="ns")
         self.sidebar_frame.grid_rowconfigure(8, weight=1) 
@@ -80,17 +78,13 @@ class DashboardPremium(ctk.CTk):
                                        font=("Segoe UI", 15), anchor="w", command=self.accion_excel, height=45)
         self.btn_excel.grid(row=9, column=0, pady=5, padx=15, sticky="nw")
 
-        # =========================================================
-        # Contenedor Derecho (Main)
-        # =========================================================
+       
         self.main_content = ctk.CTkFrame(self, fg_color="transparent")
         self.main_content.grid(row=0, column=1, sticky="nsew", padx=(10, 30), pady=20)
         self.main_content.grid_columnconfigure(0, weight=1)
         self.main_content.grid_rowconfigure(2, weight=1)
 
-        # =========================================================
-        # 2. ENCABEZADO CLARO
-        # =========================================================
+       
         self.header_frame = ctk.CTkFrame(self.main_content, fg_color="transparent", height=80)
         self.header_frame.grid(row=0, column=0, sticky="ew", pady=(0, 20))
         self.header_frame.grid_columnconfigure(1, weight=1)
@@ -101,9 +95,7 @@ class DashboardPremium(ctk.CTk):
         ctk.CTkLabel(self.titles_frame, text="Bienvenido al Sistema de Asistencia", font=("Segoe UI", 26, "bold"), text_color=TEXT_DARK).pack(anchor="w")
         ctk.CTkLabel(self.titles_frame, text="Aquí puede ver el resumen de los alumnos y controlar la cámara.", font=("Segoe UI", 15), text_color=TEXT_MUTED).pack(anchor="w")
 
-        # =========================================================
-        # 3. TARJETAS DE INFORMACIÓN (Letra Grande)
-        # =========================================================
+       
         self.kpi_frame = ctk.CTkFrame(self.main_content, fg_color="transparent")
         self.kpi_frame.grid(row=1, column=0, sticky="ew", pady=(0, 20))
         self.kpi_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
@@ -133,16 +125,13 @@ class DashboardPremium(ctk.CTk):
         ctk.CTkLabel(self.card_4, text="Estado del Sistema", font=("Segoe UI", 14), text_color="#D1FAE5").pack(anchor="w", padx=20, pady=(15, 0))
         ctk.CTkLabel(self.card_4, text="Excelente", font=("Segoe UI", 28, "bold"), text_color="#FFFFFF").pack(anchor="w", padx=20, pady=(0, 15))
 
-        # =========================================================
-        # 4. ÁREA CENTRAL (Cámara y Control)
-        # =========================================================
+        
         self.split_frame = ctk.CTkFrame(self.main_content, fg_color="transparent")
         self.split_frame.grid(row=2, column=0, sticky="nsew")
         self.split_frame.grid_columnconfigure(0, weight=7)
         self.split_frame.grid_columnconfigure(1, weight=3)
         self.split_frame.grid_rowconfigure(0, weight=1)
 
-        # --- LADO IZQUIERDO: CÁMARA ---
         self.camara_frame = ctk.CTkFrame(self.split_frame, corner_radius=25, fg_color=CARD_BG)
         self.camara_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
 
@@ -161,14 +150,14 @@ class DashboardPremium(ctk.CTk):
         self.cam_placeholder_label.place(relx=0.5, rely=0.5, anchor="center")
         self.video_pantalla = tk.Label(self.video_container, bg="#E5E5E5", bd=0)
 
-        # --- LADO DERECHO: CONTROLES ---
+        
         self.right_panel = ctk.CTkFrame(self.split_frame, fg_color="transparent")
         self.right_panel.grid(row=0, column=1, sticky="nsew", padx=(10, 0))
         self.right_panel.grid_columnconfigure(0, weight=1)
         self.right_panel.grid_rowconfigure(0, weight=1) 
         self.right_panel.grid_rowconfigure(1, weight=1) 
 
-        # Tarjeta de Justificantes
+        
         self.admin_card = ctk.CTkFrame(self.right_panel, corner_radius=25, fg_color=CARD_BG)
         self.admin_card.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
         
@@ -179,7 +168,7 @@ class DashboardPremium(ctk.CTk):
         
         ctk.CTkLabel(self.admin_card, text="Use este botón si un alumno faltó\npero tiene permiso o receta médica.", font=("Segoe UI", 12), text_color=TEXT_MUTED, justify="left").pack(anchor="w", padx=25)
 
-        # Tarjeta Grande para Encender Cámara
+        
         self.action_card = ctk.CTkFrame(self.right_panel, corner_radius=25, fg_color=CARD_BG)
         self.action_card.grid(row=1, column=0, sticky="nsew", pady=(10, 0))
         
@@ -193,9 +182,7 @@ class DashboardPremium(ctk.CTk):
         )
         self.btn_pase_lista.pack(padx=20, fill="x", pady=(0, 20))
 
-    # =========================================================
-    # LÓGICA DE FUNCIONAMIENTO (Blindada)
-    # =========================================================
+   
     def cerrar_aplicacion(self):
         reconocimiento.detener_camara()
         self.destroy()
@@ -283,7 +270,7 @@ class DashboardPremium(ctk.CTk):
             nc = nc.strip()
             conexion = db_manager.conectar()
             cursor = conexion.cursor()
-            # Aseguramos que el alumno existe y está activo
+        
             cursor.execute("SELECT id FROM elementos WHERE no_control = ? AND (estado = 'Activo' OR estado IS NULL)", (nc,))
             if cursor.fetchone():
                 cursor.execute("INSERT INTO asistencias (no_control, fecha, hora, estado) VALUES (?, ?, ?, ?)",
@@ -294,15 +281,13 @@ class DashboardPremium(ctk.CTk):
                 messagebox.showerror("Error", "El alumno no está registrado o fue dado de baja.")
             conexion.close()
 
-    # =========================================================
-    # MÓDULO INVENTARIO (Corregido, sin el candado que trababa los botones)
-    # =========================================================
+   
     def abrir_modulo_inventario(self):
         self.modal_inv = ctk.CTkToplevel(self)
         self.modal_inv.title("Préstamo y Control de Equipo")
         self.modal_inv.geometry("900x600")
         
-        # ¡ELIMINÉ EL self.modal_inv.grab_set() QUE BLOQUEABA LAS VENTANAS EMERGENTES!
+        
         
         self.modal_inv.configure(fg_color=BG_COLOR)
 
@@ -406,9 +391,7 @@ class DashboardPremium(ctk.CTk):
                 messagebox.showerror("Error", "No se encontró el instrumento o ya estaba en bodega.")
             conexion.close()
 
-    # =========================================================
-    # MOTOR DE VIDEO
-    # =========================================================
+    
     def accion_pase_lista(self):
         if "ENCENDER" in self.btn_pase_lista.cget("text"):
             self.btn_pase_lista.configure(text="⏹ APAGAR CÁMARA Y GUARDAR", fg_color=ACCENT_GREEN, hover_color="#1E3E2A")
